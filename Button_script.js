@@ -3,7 +3,7 @@ const fileLink = "https://drive.usercontent.google.com/download?id=1D3LqEaoaHmaE
 
 const initTimer = () => {
     if(downloadBtn.classList.contains("disable-timer")) {
-               return location.href = "https://www.idrive.com/idrive/sh/sh/o1j3p6v5s4";
+               return location.href = "https://api.pcloud.com/getpubzip?code=XZi4kB5Zf0Ajx8pPs1Y4vAApjzKaVjeje2l7";
     }
     let timer = downloadBtn.dataset.timer;
     downloadBtn.classList.add("timer");
