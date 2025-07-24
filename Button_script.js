@@ -1,5 +1,5 @@
 const downloadBtn = document.querySelector(".download-btn");
-const fileLink = "https://drive.google.com/uc?export=download&id=1aYiaLn3YOjL-_o5QBCy7tU1epqA6gZoi";
+const fileLink = "https://drive.usercontent.google.com/download?id=1D3LqEaoaHmaESoREQJq-ET1jzDyGRNlj&export=download&authuser=0";
 
 const initTimer = () => {
     if(downloadBtn.classList.contains("disable-timer")) {
@@ -7,7 +7,7 @@ const initTimer = () => {
     }
     let timer = downloadBtn.dataset.timer;
     downloadBtn.classList.add("timer");
-    downloadBtn.innerHTML = `Your download will begin in <b>${timer}</b> seconds`;
+    downloadBtn.innerHTML = `Đang Tiến Hành Tải Xuống Còn Lại <b>${timer}</b> Giây`;
     const initCounter = setInterval(() => {
         if(timer > 0) {
             timer--;
