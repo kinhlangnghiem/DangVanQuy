@@ -1,9 +1,10 @@
 const downloadBtn = document.querySelector(".download-btn");
-const fileLink = "https://archive.org/download/LA_THO_TINH_DO/Th%C3%ADch%20Thi%E1%BB%81n%20T%C3%A2m%20-%20L%C3%A1%20Th%C6%A1%20T%E1%BB%8Bnh%20%C4%90%E1%BB%99.mp3";
+const fileLink = "https://drive.google.com/drive/mobile/folders/1zqoCVIN9wSR5jTSQUwzJzfREaQA74xM5
+";
 
 const initTimer = () => {
     if(downloadBtn.classList.contains("disable-timer")) {
-               return location.href = "https://www.googleapis.com/drive/v3/files/1bbDZzQeqUuRXn-YwRG8fGHmCDCiSy5kN?alt=media&key=AIzaSyAvwKl-8enWVuIQiCtbKxkUqPNOOzLfmzY";
+               return location.href = "https://www.idrive.com/idrive/sh/sh/o1j3p6v5s4";
     }
     let timer = downloadBtn.dataset.timer;
     downloadBtn.classList.add("timer");
