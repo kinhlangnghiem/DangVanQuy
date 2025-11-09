@@ -1,0 +1,755 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+ 
+
+  
+    <script src="https://cpwebassets.codepen.io123/assets/common/stopExecutionOnTimeout-2c7831bb44f98c1391d6a4ffda0e1fd302503391ca806e7fcc7b9b87197aec26.js"></script>
+
+
+  <title>MP3 Player 2025</title>
+
+    <link rel="canonical" href="https://codepen.io/samsimite/pen/ogbLaXm">
+  
+  
+  
+  
+<style>
+body {
+            background-color: #000000;
+            overflow: hidden;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        .box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .player {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 450px;
+            height: 210px;
+            background-color: #1d1d1d;
+            border: ridge 5px #ff9900;
+        }
+
+        .play {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-image: url(https://tim-school.com/codepen/mp32025/play.png);
+            background-size: 100% 100%;
+            background-color: #000000;
+        }
+
+        .pause {
+            position: absolute;
+            top: 100px;
+            left: 28px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-image: url(https://tim-school.com/codepen/mp32025/pause.png);
+            background-size: 100% 100%;
+            background-color: #000000;
+        }
+
+        .stop {
+            position: absolute;
+            top: 154px;
+            left: 28px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-image: url(https://tim-school.com/codepen/mp32025/stop.png);
+            background-size: 100% 100%;
+            background-color: #000000;
+        }
+
+        .play:hover,
+        .pause:hover,
+        .stop:hover {
+            background-color: #c77d1d;
+        }
+
+        .title {
+            position: absolute;
+            top: 0;
+            left: 100px;
+            width: 240px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .timex {
+            position: absolute;
+            bottom: 70px;
+            left: 100px;
+            width: 240px;
+            height: 110px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .volbox {
+            position: absolute;
+            bottom: 80px;
+            right: -50px;
+            width: 180px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transform: rotate(-90deg);
+        }
+
+        [type="range"].volume {
+            font-size: 1em;
+            width: 20em;
+            appearance: none;
+            height: 2.5em;
+            background:
+                repeating-linear-gradient(90deg, #000 0 0.1em, #aa444400 0 1em, #000 0 1em),
+                radial-gradient(#fff5, #fff0) 0 0 / 1em 100%,
+                linear-gradient(90deg, #29ee01 72%, #ffd308 0 82%, #e00 0),
+                #f005;
+            overflow: hidden;
+        }
+
+        @keyframes blink {
+
+            0%,
+            20%,
+            100% {
+                background: #0000;
+            }
+
+            50% {
+                background: #0002;
+            }
+        }
+
+        [type="range"].volume::-webkit-slider-thumb {
+            appearance: none;
+            width: 1em;
+            height: 3.6em;
+            animation: blink 0.7s infinite;
+            color: #000000;
+            border: 0;
+            border-radius: 0;
+            background: #fff2;
+            box-shadow:
+                0 0 0.5em #fff8,
+                1em 0, 2em 0, 3em 0, 4em 0, 5em 0, 6em 0, 7em 0,
+                8em 0, 9em 0, 10em 0, 11em 0, 12em 0, 13em 0,
+                14em 0, 15em 0, 16em 0, 17em 0, 18em 0, 19em 0;
+        }
+
+        [type="range"].volume::-moz-range-thumb {
+            appearance: none;
+            width: 1em;
+            height: 3.6em;
+            animation: blink 0.7s infinite;
+            color: #000000;
+            border: 0;
+            border-radius: 0;
+            box-shadow:
+                1em 0, 2em 0, 3em 0, 4em 0, 5em 0, 6em 0, 7em 0,
+                8em 0, 9em 0, 10em 0, 11em 0, 12em 0, 13em 0,
+                14em 0, 15em 0, 16em 0, 17em 0, 18em 0, 19em 0;
+        }
+
+        input[type="range"].volume::-webkit-slider-runnable-track {
+            background-color: #000000;
+            height: 0.5rem;
+            border-radius: 0;
+        }
+
+        input[type="range"].volume::-moz-range-track {
+            background-color: #000000;
+            height: 0.5rem;
+            border-radius: 0;
+        }
+
+        @media (prefers-reduced-motion) {
+            [type="range"].volume::-webkit-slider-thumb {
+                animation: none;
+            }
+
+            [type="range"].volume::-moz-range-thumb {
+                animation: none;
+            }
+        }
+
+        .ranger {
+            position: absolute;
+            bottom: 15px;
+            left: 100px;
+            width: 240px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            width: 235px;
+        }
+
+        input[type="range"]:focus {
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            height: 0.5rem;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -12px;
+            background-color: #000000;
+            height: 2rem;
+            width: 1rem;
+            border: solid 1px #ffffff;
+        }
+
+        input[type="range"]::-moz-range-track {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            height: 0.5rem;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            border: none;
+            border-radius: 0;
+            background-color: #000000;
+            height: 2rem;
+            width: 1rem;
+            border: solid 1px #ffffff;
+        }
+
+        .mySlides {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        #audioDuration1, #audioDuration2, #audioDuration3, #audioDuration4, #audioDuration5 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            font-size: 72px;
+            text-shadow: 2px 2px 0 #df8117, 2px -2px 0 #df8117, -2px 2px 0 #df8117, -2px -2px 0 #df8117, 2px 0px 0 #df8117, 0px 2px 0 #df8117, -2px 0px 0 #df8117, 0px -2px 0 #df8117;
+            color: #000000;
+        }
+
+        .playlist {
+            position: absolute;
+            top: 270px;
+            left: 50px;
+            width: 450px;
+            height: 210px;
+            background-color: #1d1d1d;
+            border: ridge 5px #ff9900;
+        }
+
+        .song1,
+        .song2,
+        .song3,
+        .song4,
+        .song5 {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: calc(20% - 1px);
+            border-bottom: solid 1px #6A6A6A;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            padding-left: 10px;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .song1 {
+            top: 0;
+        }
+
+        .song2 {
+            top: 20%;
+        }
+
+        .song3 {
+            top: 40%;
+        }
+
+        .song4 {
+            top: 60%;
+        }
+
+        .song5 {
+            top: 80%;
+        }
+
+        .song1:hover,
+        .song2:hover,
+        .song3:hover,
+        .song4:hover,
+        .song5:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+
+<body translate="no">
+  <div class="box">
+        <div class="player">
+            <div class="mySlides">
+                <div class="title">Space Tires</div>
+                <div class="play" id="play1"></div>
+                <div class="pause" id="pause1"></div>
+                <div class="stop" id="stop1"></div>
+                <div class="ranger">
+                    <input type="range" id="range1" value="1" step="any" max="100" min="1">
+                </div>
+                <div class="timex"><span id="audioDuration1">00:00</span></div>
+                <div class="volbox">
+                    <input type="range" class="volume" id="volumeSlider1" value="100" min="0" max="100" step="1">
+                </div>
+            </div>
+            <div class="mySlides">
+                <div class="title">Blade Soundtrack</div>
+                <div class="play" id="play2"></div>
+                <div class="pause" id="pause2"></div>
+                <div class="stop" id="stop2"></div>
+                <div class="ranger">
+                    <input type="range" id="range2" value="1" step="any" max="100" min="1">
+                </div>
+                <div class="timex"><span id="audioDuration2">00:00</span></div>
+                <div class="volbox">
+                    <input type="range" class="volume" id="volumeSlider2" value="100" min="0" max="100" step="1">
+                </div>
+            </div>
+            <div class="mySlides">
+                <div class="title">Matrix Theme Song</div>
+                <div class="play" id="play3"></div>
+                <div class="pause" id="pause3"></div>
+                <div class="stop" id="stop3"></div>
+                <div class="ranger">
+                    <input type="range" id="range3" value="1" step="any" max="100" min="1">
+                </div>
+                <div class="timex"><span id="audioDuration3">00:00</span></div>
+                <div class="volbox">
+                    <input type="range" class="volume" id="volumeSlider3" value="100" min="0" max="100" step="1">
+                </div>
+            </div>
+            <div class="mySlides">
+                <div class="title">TRON Legacy Soundtrack</div>
+                <div class="play" id="play4"></div>
+                <div class="pause" id="pause4"></div>
+                <div class="stop" id="stop4"></div>
+                <div class="ranger">
+                    <input type="range" id="range4" value="1" step="any" max="100" min="1">
+                </div>
+                <div class="timex"><span id="audioDuration4">00:00</span></div>
+                <div class="volbox">
+                    <input type="range" class="volume" id="volumeSlider4" value="100" min="0" max="100" step="1">
+                </div>
+            </div>
+            <div class="mySlides">
+                <div class="title">Astral Projection</div>
+                <div class="play" id="play5"></div>
+                <div class="pause" id="pause5"></div>
+                <div class="stop" id="stop5"></div>
+                <div class="ranger">
+                    <input type="range" id="range5" value="1" step="any" max="100" min="1">
+                </div>
+                <div class="timex"><span id="audioDuration5">00:00</span></div>
+                <div class="volbox">
+                    <input type="range" class="volume" id="volumeSlider5" value="100" min="0" max="100" step="1">
+                </div>
+            </div>
+        </div>
+        <div class="playlist">
+            <div class="song1">Space Tires</div>
+            <div class="song2">Blade Soundtrack</div>
+            <div class="song3">Matrix Theme Song</div>
+            <div class="song4">TRON Legacy Soundtrack</div>
+            <div class="song5">Astral Projection</div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <audio id="myAudio1" src="https://tim-school.com/codepen/mp32025/z1.mp3" preload="auto" loop></audio>
+    <audio id="myAudio2" src="https://tim-school.com/codepen/mp32025/z2.mp3" preload="auto" loop></audio>
+    <audio id="myAudio3" src="https://tim-school.com/codepen/mp32025/z3.mp3" preload="auto" loop></audio>
+    <audio id="myAudio4" src="https://tim-school.com/codepen/mp32025/z4.mp3" preload="auto" loop></audio>
+    <audio id="myAudio5" src="https://tim-school.com/codepen/mp32025/z5.mp3" preload="auto" loop></audio>
+  
+    <script id="rendered-js" >
+let slideIndex = 1;
+showSlides(slideIndex);
+
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  if (n > slides.length) {slideIndex = 1;}
+  if (n < 1) {slideIndex = slides.length;}
+  for (i = 0; i < slides.length; i++) {if (window.CP.shouldStopExecution(0)) break;
+    slides[i].style.display = "none";
+  }window.CP.exitedLoop(0);
+  slides[slideIndex - 1].style.display = "block";
+}
+
+var audioz1 = $("#myAudio1")[0];
+var audioz2 = $("#myAudio2")[0];
+var audioz3 = $("#myAudio3")[0];
+var audioz4 = $("#myAudio4")[0];
+var audioz5 = $("#myAudio5")[0];
+
+$('document').ready(function () {
+  $('#play1').click(function () {
+    audioz1.play();
+  });
+});
+$('document').ready(function () {
+  $('#pause1').click(function () {
+    audioz1.pause();
+  });
+});
+$('document').ready(function () {
+  $('#stop1').click(function () {
+    audioz1.pause();
+    audioz1.currentTime = 0;
+  });
+});
+$('document').ready(function () {
+  $('#play2').click(function () {
+    audioz2.play();
+  });
+});
+$('document').ready(function () {
+  $('#pause2').click(function () {
+    audioz2.pause();
+  });
+});
+$('document').ready(function () {
+  $('#stop2').click(function () {
+    audioz2.pause();
+    audioz2.currentTime = 0;
+  });
+});
+$('document').ready(function () {
+  $('#play3').click(function () {
+    audioz3.play();
+  });
+});
+$('document').ready(function () {
+  $('#pause3').click(function () {
+    audioz3.pause();
+  });
+});
+$('document').ready(function () {
+  $('#stop3').click(function () {
+    audioz3.pause();
+    audioz3.currentTime = 0;
+  });
+});
+$('document').ready(function () {
+  $('#play4').click(function () {
+    audioz4.play();
+  });
+});
+$('document').ready(function () {
+  $('#pause4').click(function () {
+    audioz4.pause();
+  });
+});
+$('document').ready(function () {
+  $('#stop4').click(function () {
+    audioz4.pause();
+    audioz4.currentTime = 0;
+  });
+});
+$('document').ready(function () {
+  $('#play5').click(function () {
+    audioz5.play();
+  });
+});
+$('document').ready(function () {
+  $('#pause5').click(function () {
+    audioz5.pause();
+  });
+});
+$('document').ready(function () {
+  $('#stop5').click(function () {
+    audioz5.pause();
+    audioz5.currentTime = 0;
+  });
+});
+
+const audio1 = document.getElementById('myAudio1');
+const audio2 = document.getElementById('myAudio2');
+const audio3 = document.getElementById('myAudio3');
+const audio4 = document.getElementById('myAudio4');
+const audio5 = document.getElementById('myAudio5');
+const audioSeeker1 = document.getElementById('range1');
+const audioSeeker2 = document.getElementById('range2');
+const audioSeeker3 = document.getElementById('range3');
+const audioSeeker4 = document.getElementById('range4');
+const audioSeeker5 = document.getElementById('range5');
+
+audio1.onloadedmetadata = () => {
+  audioSeeker1.max = audio1.duration;
+};
+audio2.onloadedmetadata = () => {
+  audioSeeker2.max = audio2.duration;
+};
+audio3.onloadedmetadata = () => {
+  audioSeeker3.max = audio3.duration;
+};
+audio4.onloadedmetadata = () => {
+  audioSeeker4.max = audio4.duration;
+};
+audio5.onloadedmetadata = () => {
+  audioSeeker5.max = audio5.duration;
+};
+audio1.ontimeupdate = () => {
+  audioSeeker1.value = audio1.currentTime;
+};
+audio2.ontimeupdate = () => {
+  audioSeeker2.value = audio2.currentTime;
+};
+audio3.ontimeupdate = () => {
+  audioSeeker3.value = audio3.currentTime;
+};
+audio4.ontimeupdate = () => {
+  audioSeeker4.value = audio4.currentTime;
+};
+audio5.ontimeupdate = () => {
+  audioSeeker5.value = audio5.currentTime;
+};
+audioSeeker1.oninput = () => {
+  audio1.currentTime = audioSeeker1.value;
+};
+audioSeeker2.oninput = () => {
+  audio2.currentTime = audioSeeker2.value;
+};
+audioSeeker3.oninput = () => {
+  audio3.currentTime = audioSeeker3.value;
+};
+audioSeeker4.oninput = () => {
+  audio4.currentTime = audioSeeker4.value;
+};
+audioSeeker5.oninput = () => {
+  audio5.currentTime = audioSeeker5.value;
+};
+
+const audiox1 = document.getElementById('myAudio1');
+const currentTimeDisplay1 = document.getElementById('audioDuration1');
+
+audiox1.addEventListener('timeupdate', function () {
+  const currentSeconds = Math.floor(audiox1.currentTime % 60);
+  const currentMinutes = Math.floor(audiox1.currentTime / 60 % 60);
+
+  // Format the time as MM:SS
+  const formattedSeconds = currentSeconds < 10 ? '0' + currentSeconds : currentSeconds;
+  const formattedMinutes = currentMinutes < 10 ? '0' + currentMinutes : currentMinutes;
+
+  currentTimeDisplay1.innerHTML = `${formattedMinutes}:${formattedSeconds}`;
+});
+const audiox2 = document.getElementById('myAudio2');
+const currentTimeDisplay2 = document.getElementById('audioDuration2');
+
+audiox2.addEventListener('timeupdate', function () {
+  const currentSeconds = Math.floor(audiox2.currentTime % 60);
+  const currentMinutes = Math.floor(audiox2.currentTime / 60 % 60);
+
+  // Format the time as MM:SS
+  const formattedSeconds = currentSeconds < 10 ? '0' + currentSeconds : currentSeconds;
+  const formattedMinutes = currentMinutes < 10 ? '0' + currentMinutes : currentMinutes;
+
+  currentTimeDisplay2.innerHTML = `${formattedMinutes}:${formattedSeconds}`;
+});
+const audiox3 = document.getElementById('myAudio3');
+const currentTimeDisplay3 = document.getElementById('audioDuration3');
+
+audiox3.addEventListener('timeupdate', function () {
+  const currentSeconds = Math.floor(audiox3.currentTime % 60);
+  const currentMinutes = Math.floor(audiox3.currentTime / 60 % 60);
+
+  // Format the time as MM:SS
+  const formattedSeconds = currentSeconds < 10 ? '0' + currentSeconds : currentSeconds;
+  const formattedMinutes = currentMinutes < 10 ? '0' + currentMinutes : currentMinutes;
+
+  currentTimeDisplay3.innerHTML = `${formattedMinutes}:${formattedSeconds}`;
+});
+const audiox4 = document.getElementById('myAudio4');
+const currentTimeDisplay4 = document.getElementById('audioDuration4');
+
+audiox4.addEventListener('timeupdate', function () {
+  const currentSeconds = Math.floor(audiox4.currentTime % 60);
+  const currentMinutes = Math.floor(audiox4.currentTime / 60 % 60);
+
+  // Format the time as MM:SS
+  const formattedSeconds = currentSeconds < 10 ? '0' + currentSeconds : currentSeconds;
+  const formattedMinutes = currentMinutes < 10 ? '0' + currentMinutes : currentMinutes;
+
+  currentTimeDisplay4.innerHTML = `${formattedMinutes}:${formattedSeconds}`;
+});
+const audiox5 = document.getElementById('myAudio5');
+const currentTimeDisplay5 = document.getElementById('audioDuration5');
+
+audiox5.addEventListener('timeupdate', function () {
+  const currentSeconds = Math.floor(audiox5.currentTime % 60);
+  const currentMinutes = Math.floor(audiox5.currentTime / 60 % 60);
+
+  // Format the time as MM:SS
+  const formattedSeconds = currentSeconds < 10 ? '0' + currentSeconds : currentSeconds;
+  const formattedMinutes = currentMinutes < 10 ? '0' + currentMinutes : currentMinutes;
+
+  currentTimeDisplay5.innerHTML = `${formattedMinutes}:${formattedSeconds}`;
+});
+
+const myAudio1 = document.getElementById('myAudio1');
+const myAudio2 = document.getElementById('myAudio2');
+const myAudio3 = document.getElementById('myAudio3');
+const myAudio4 = document.getElementById('myAudio4');
+const myAudio5 = document.getElementById('myAudio5');
+const volumeSlider1 = document.getElementById('volumeSlider1');
+const volumeSlider2 = document.getElementById('volumeSlider2');
+const volumeSlider3 = document.getElementById('volumeSlider3');
+const volumeSlider4 = document.getElementById('volumeSlider4');
+const volumeSlider5 = document.getElementById('volumeSlider5');
+
+volumeSlider1.addEventListener('input', function () {
+  myAudio1.volume = volumeSlider1.value / 100;
+});
+myAudio1.volume = volumeSlider1.value / 100;
+
+volumeSlider2.addEventListener('input', function () {
+  myAudio2.volume = volumeSlider2.value / 100;
+});
+myAudio2.volume = volumeSlider2.value / 100;
+
+volumeSlider3.addEventListener('input', function () {
+  myAudio3.volume = volumeSlider3.value / 100;
+});
+myAudio3.volume = volumeSlider3.value / 100;
+
+volumeSlider4.addEventListener('input', function () {
+  myAudio4.volume = volumeSlider4.value / 100;
+});
+myAudio4.volume = volumeSlider4.value / 100;
+
+volumeSlider5.addEventListener('input', function () {
+  myAudio5.volume = volumeSlider5.value / 100;
+});
+myAudio5.volume = volumeSlider5.value / 100;
+
+$('document').ready(function () {
+  $('.song1').click(function () {
+    currentSlide(1);
+    audioz1.play();
+    audioz2.pause();
+    audioz3.pause();
+    audioz4.pause();
+    audioz5.pause();
+  });
+});
+$('document').ready(function () {
+  $('.song2').click(function () {
+    currentSlide(2);
+    audioz2.play();
+    audioz1.pause();
+    audioz3.pause();
+    audioz4.pause();
+    audioz5.pause();
+  });
+});
+$('document').ready(function () {
+  $('.song3').click(function () {
+    currentSlide(3);
+    audioz3.play();
+    audioz1.pause();
+    audioz2.pause();
+    audioz4.pause();
+    audioz5.pause();
+  });
+});
+$('document').ready(function () {
+  $('.song4').click(function () {
+    currentSlide(4);
+    audioz4.play();
+    audioz1.pause();
+    audioz2.pause();
+    audioz3.pause();
+    audioz5.pause();
+  });
+});
+$('document').ready(function () {
+  $('.song5').click(function () {
+    currentSlide(5);
+    audioz5.play();
+    audioz1.pause();
+    audioz2.pause();
+    audioz3.pause();
+    audioz4.pause();
+  });
+});
+//# sourceURL=pen.js
+  </script>
+
+  
+</body>
+
+</html>
